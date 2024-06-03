@@ -1,0 +1,13 @@
+C:\Users\lucac\Desktop\DepProject\RestAPI-protobuf-json\microservices\product-service-json\src\main\java\com\luca\core\product\util\HttpErrorInfo.java
+C:\Users\lucac\Desktop\DepProject\RestAPI-protobuf-json\microservices\product-service-json\src\main\java\com\luca\core\product\exceptions\NotFoundException.java
+C:\Users\lucac\Desktop\DepProject\RestAPI-protobuf-json\microservices\product-service-json\src\main\java\com\luca\core\product\services\ProductMapper.java
+C:\Users\lucac\Desktop\DepProject\RestAPI-protobuf-json\microservices\product-service-json\src\main\java\com\luca\core\product\util\ServiceUtil.java
+C:\Users\lucac\Desktop\DepProject\RestAPI-protobuf-json\microservices\product-service-json\src\main\java\com\luca\core\product\ProductServiceJsonApplication.java
+C:\Users\lucac\Desktop\DepProject\RestAPI-protobuf-json\microservices\product-service-json\src\main\java\com\luca\core\product\Product.java
+C:\Users\lucac\Desktop\DepProject\RestAPI-protobuf-json\microservices\product-service-json\src\main\java\com\luca\core\product\exceptions\InvalidInputException.java
+C:\Users\lucac\Desktop\DepProject\RestAPI-protobuf-json\microservices\product-service-json\src\main\java\com\luca\core\product\util\GlobalControllerExceptionHandler.java
+C:\Users\lucac\Desktop\DepProject\RestAPI-protobuf-json\microservices\product-service-json\src\main\java\com\luca\core\product\services\ProductServiceImpl.java
+C:\Users\lucac\Desktop\DepProject\RestAPI-protobuf-json\microservices\product-service-json\src\main\java\com\luca\core\product\interfaces\ProductService.java
+C:\Users\lucac\Desktop\DepProject\RestAPI-protobuf-json\microservices\product-service-json\src\main\java\com\luca\core\product\persistence\ProductRepository.java
+C:\Users\lucac\Desktop\DepProject\RestAPI-protobuf-json\microservices\product-service-json\src\main\java\com\luca\core\product\persistence\ProductEntity.java
+C:\Users\lucac\Desktop\DepProject\RestAPI-protobuf-json\microservices\product-service-json\src\main\java\com\luca\core\product\exceptions\BadRequestException.java

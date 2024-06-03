@@ -1,0 +1,4 @@
+com\luca\core\product\PersistenceTests.class
+com\luca\core\product\MongoDbTestBase.class
+com\luca\core\product\ProductServiceApplicationTests.class
+com\luca\core\product\MapperTests.class
