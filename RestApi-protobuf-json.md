@@ -92,6 +92,41 @@ create the message. We then call `toByteArray()` to serialize the
 message to a byte array. To deserialize the message, we call
 `Person.parseFrom(data)`.
 
+# PROTOBUF vs JSON
+
+## Speed
+
+Protobuf is faster than JSON because it is a binary format that is
+optimized for speed. JSON is a text-based format that is slower
+than protobuf because it requires parsing and serialization.
+
+## Size
+
+Protobuf is smaller than JSON because it is a binary format that is
+optimized for size. JSON is a text-based format that is larger than
+protobuf because it requires more space to store the data.
+
+## Using protobuf and JSON
+
+You can use protobuf and JSON in your applications by defining
+messages in a `.proto` file and a `.json` file, respectively. You
+can then use the `protoc` compiler to generate code in your language
+of choice that can serialize and deserialize data in that format.
+
+## Disadvantages of protobuf
+
+- **Lack of resources**: you won't find that many resources (do not expect 
+a very detailed documentation, nor too many blog posts).
+- **Smaller community**: on Stack Overflow, for example, you will find 
+roughly 1.500 questions marked with Protobuf tags. While JSON have more
+than 180 thousand questions on this same platform.
+- **Lack of support**: Google does not provide support for other programming
+languages like Swift, R, Scala and etc... but, sometimes, you can overcome
+this issue with third party libraries, like Swift Protobuf provided by Apple.
+- **Non-human readability**: JSON, as exchanged on text format and with simple
+structure, is easy to be read and analyzed by humans. This is not the case
+with a binary format.
+
 # PROJECT EXPLANATION
 
 This project has  two microservices, both project will have the same 
@@ -334,7 +369,7 @@ endpoint with the following body for the RestAPI-json:
 
 Here is an example:
 
-![Postman](images/postman-json.png)
+![Postman json POST](.\images\json_post.png)
 
 #### CURL
 
@@ -376,7 +411,7 @@ In Postman, you can import the file ad the request body and set the header
 
 Here is an example:
 
-![Postman](images/postman-protobuf.png)
+![Postman protobuf POST](./images/protobuf_post.png)
 
 #### CURL
 
@@ -396,9 +431,12 @@ created using the method used in Postman.
 ## Resources
 
 - [Protocol Buffers](https://developers.google.com/protocol-buffers)
+- [Protocol Buffers vs JSON](https://auth0.com/blog/beating-json-performance-with-protobuf/)
 - [Protocol Buffers Java](https://protobuf.dev/getting-started/javatutorial/)
-- [Protocol Buffers Maven Plugin](
-- 
+- [Protocol Buffers Maven Plugin](https://github.com/os72/protoc-jar-maven-plugin)
+- [JMeter](https://jmeter.apache.org/)
+- [JMeter Maven Plugin](https://github.com/jmeter-maven-plugin/jmeter-maven-plugin)
+
 
 
 
