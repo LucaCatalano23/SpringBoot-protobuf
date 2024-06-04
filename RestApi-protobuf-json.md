@@ -50,13 +50,28 @@ In this example, we define a message called `Person` with three
 fields: `name`, `id`, and `email`. Each field has a type and a
 unique field number.
 
+## Generating code
+
+Once you have defined your message format in a `.proto` file, you
+can use the `protoc` compiler to generate code in your language of
+choice that can serialize and deserialize data in that format. Here
+is an example of how you might generate Java code from a `.proto`
+file:
+
+```bash
+protoc --java_out=. person.proto
+```
+
+This command generates Java code from the `person.proto` file and
+puts the generated code in the current directory.
+
+You can download the `protoc` compiler from the gitHub repository
+`https://github.com/protocolbuffers/protobuf/releases`.
+
 ## Serializing and deserializing data
 
-Once you have defined your message format, you can use the `protoc`
-compiler to generate code in your language of choice that can
-serialize and deserialize data in that format. Here is an example
-of how you might serialize and deserialize a `Person` message in
-Java:
+Here is an example of how you might serialize and deserialize a 
+`Person` message in Java:
 
 ```java 
 // Serialize a Person message
@@ -77,23 +92,24 @@ create the message. We then call `toByteArray()` to serialize the
 message to a byte array. To deserialize the message, we call
 `Person.parseFrom(data)`.
 
-# PROJECTS EXPLENATION
+# PROJECT EXPLANATION
 
-Both project will have the same functionality, but they will use
-different serialization formats. The first project will use JSON
-for serialization, and the second project will use protobuf. In both 
-are implemented a simple REST API that allows you to create, read,
-and delete `Product`. We can check the performance of both projects,
-using jmeter to send requests, and see how protobuf compares to JSON
-in terms of speed and size.
+This project has  two microservices, both project will have the same 
+functionality, but they will use different serialization formats. 
+The first microservice will use JSON for serialization, and the second
+project will use protobuf. In both are implemented a simple REST API 
+that allows you to create, read, and delete `Product`. We can check the
+performance of microservices, using jmeter to send requests, and see how
+protobuf compares to JSON in terms of speed and size.
 
-# PERFORMANCE TEST
-Both projects will be tested using JMeter to send requests to the
+## PERFORMANCES TEST
+
+The microservices will be tested using JMeter to send requests to the
 API and measure the performance of the API. We will measure the
-response time and throughput of the API for both projects. We will
-also measure the size of the response data for both projects.
+response time, the throughput and the size of the response data of the 
+API for both microservices.
 
-The plugin used to use jmter is:
+The plugin used to implement jmter is:
 
 ```pom.xml
 <plugin>
@@ -112,18 +128,18 @@ The plugin used to use jmter is:
 </plugin>
 ```
 
-In the `src/test/jmeter` directory there is the `.jmx` files that
-contain the test plan for the performance test. The test plan
-contains the following elements:
+In the `src/test/jmeter` directory of each microservice there is
+the `Benchmark.jmx` files that contain the test plan for the performance 
+test. The test plan contains the following elements:
 
-- Thread Group: The thread group defines the number of threads
+- ***Thread Group***: The thread group defines the number of threads
   and the number of requests to send to the API.
-- HTTP Request: The HTTP request sends a request to the API.
-- Summary Report: The summary report shows the response time
+- ***HTTP Request***: The HTTP request sends a request to the API.
+- ***Summary Report***: The summary report shows the response time
   and throughput of the API.
-- View Results Tree: The view results tree shows the response
+- ***View Results Tree***: The view results tree shows the response
   data of the API.
-- Aggregate Report: The aggregate report shows the response
+- ***Aggregate Report***: The aggregate report shows the response
   time and throughput of the API.
 
 To run the performance test, you can use the following command:
@@ -132,20 +148,21 @@ To run the performance test, you can use the following command:
 mvn clean verify
 ```
 
-This command generates a report in the `target/jmeter/results/`.
+This command generates a report in the `target/jmeter/results/` in 
+each microservice directory.
 
-## RestAPI-json
+## Product-service-json microservice
 
-This project is a simple REST API. The API is implemented using Spring
-Boot and uses JSON for serialization. The API has three endpoints: `/products`,
-`/products/{id}`, and `/products/{id}`. You can use these endpoints 
-respectively to create, read, and delete `Product`.
+This microservice is a simple REST API. The API is implemented using
+Spring Boot and uses JSON for serialization. The API has three endpoints:
+`/products`, `/products/{id}`, and `/products/{id}`. You can use these
+endpoints respectively to create, read, and delete `Product`.
 
-## RestAPI-protobuf
+## Product-service-protobuf microservice
 
 ### DEPENDENCIES
 
-The project, to implement protobuf, uses the following dependencies:
+The microservice, to implement protobuf, uses the following dependencies:
 
 ```pomo.xml
 <dependency>
@@ -159,9 +176,9 @@ in Java.
 
 ### PLUGIN
 
-The project uses the `protobuf-maven-plugin` plugin to generate Java
-code from the `.proto` file instead the protoc compiler. Here is the 
-configuration of the plugin in the `pom.xml` file:
+The microservice uses the `protobuf-maven-plugin` plugin to generate
+Java code from the `.proto` file instead the protoc compiler. Here is
+the configuration of the plugin in the `pom.xml` file:
 
 ```pom.xml
 <plugin>
@@ -196,6 +213,8 @@ This plugin generates Java code from the `.proto` file in the
 `target/classes/{package_name_in_proto_file}` directory.
 
 ### MESSAGE DEFINITION
+
+There are two `.proto` files in the `src/main/protobuf/` directory.
 
 The file `product.proto` contains the definition of the `Product`
 message. Here is the content of the `product.proto` file:
@@ -254,7 +273,7 @@ create, read, and delete `Product`.
 In the mapping of the endpoints, you have to specify the serialization
 format.
 
-For example, to create a `Product` using protobuf, you can send a
+For example, to create a `Product` using protobuf, you must send a
 request with the `Content-Type` header set to `application/x-protobuf`:
 
 ```java
@@ -275,8 +294,8 @@ import com.luca.product.protobuf.ProductProto.Product;
 ### ERROR HANDLING
 
 I have implemented a custom error handler that returns an `ErrorInfo`
-using protobuf beacuse the error response is serialized using json by
-default. 
+using protobuf because the error response, in Spring boot, is serialized
+using json by default. 
 
 ### RUNNING THE PROJECT
 
@@ -287,12 +306,18 @@ build and run the project inside IntelliJ IDEA by launching the command
 You can also run the microservices containerizing them with Docker
 launching the commands:
 
-- mvn clean package (clean useful in the case of a new build and package
+- `mvn clean package` (clean useful in the case of a new build and package
   to create the jar files)
-- docker compose up --build -d (to build and run the containers)
-- docker compose down (to stop the containers).
+- `docker compose up --build -d` (to build and run the containers)
+- `docker compose down` (to stop the containers).
 
-## USING API
+# USING API
+
+## REQUESTS
+
+### Product-service-json
+
+#### POSTMAN
 
 To send requests to the API, you can use a tool like Postman.
 
@@ -303,17 +328,80 @@ endpoint with the following body for the RestAPI-json:
 {
   "productId": 1,
   "name": "Product 1",
-  "weight": 100,
-  "serviceAddress": "http://localhost:8080/products/1"
+  "weight": 100
 }
 ```
 
-and with a binary body for the RestAPI-protobuf. I advise you to use
-tools to like `https://www.protobufpal.com/` to create the hexadecimal
-body and `https://gchq.github.io/CyberChef/#recipe=From_Hex('Auto')&input=MDg2ZjEyMGI1MDcyNmY2NDc1NjM3NDIwMzEzMTMxMTg2ZjIyMDA&oeol=VT`
-to convert the hexadecimal body in binary and save it in a file. In Postman
-you can import the file ad the request body and set the header `Content-Type`
-to `application/x-protobuf`.
+Here is an example:
+
+![Postman](images/postman-json.png)
+
+#### CURL
+
+You can also use curl to send requests to the API. Here is an example
+of how you might create a `Product` using curl:
+
+```bash
+curl -X POST http://localhost:7002/product \
+  -H "Content-Type: application/json" \
+  -d '{
+        "productId": 1,
+        "name": "Product 1",
+        "weight": 1
+      }'
+```
+
+### Product-service-protobuf
+
+#### POSTMAN
+
+To create a `Product`, you can send a POST request to the `/product`
+endpoint with a binary body for the RestAPI-protobuf. 
+
+I advise you to use tools to like `https://www.protobufpal.com/` to 
+create the hexadecimal body and `https://gchq.github.io/CyberChef/#recipe=From_Hex('Auto')&input=MDg2ZjEyMGI1MDcyNmY2NDc1NjM3NDIwMzEzMTMxMTg2ZjIyMDA&oeol=VT`
+to convert the hexadecimal body in binary and save it in a file. 
+
+You can also create the binary file using the `protoc` compiler: 
+
+```bash
+protoc --encode=com.luca.product.protobuf.ProductProto.Product \
+  src/main/resources/product.proto \
+  <(echo 'productId: 1 name: "Product 1" weight: 1') \
+  > product.bin
+```
+
+In Postman, you can import the file ad the request body and set the header
+`Content-Type` to `application/x-protobuf`.
+
+Here is an example:
+
+![Postman](images/postman-protobuf.png)
+
+#### CURL
+
+You can also use curl to send requests to the API. Here is an example
+of how you might create a `Product` using curl:
+
+```bash
+curl -X POST http://localhost:7001/product \
+  -H "Content-Type: application/x-protobuf" \
+  --data-binary @product.bin
+```
+                                          
+The file `product.bin` contains the binary data of the `Product` message
+and must be located in the same directory as the curl command. It can be
+created using the method used in Postman.
+
+## Resources
+
+- [Protocol Buffers](https://developers.google.com/protocol-buffers)
+- [Protocol Buffers Java](https://protobuf.dev/getting-started/javatutorial/)
+- [Protocol Buffers Maven Plugin](
+- 
+
+
+
 
 
 

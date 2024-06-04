@@ -3,7 +3,8 @@ package com.luca.core.product;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.luca.core.product.persistence.ProductEntity;
-import com.luca.core.product.services.ProductMapper;
+import com.luca.core.product.mapper.ProductMapper;
+import com.luca.core.product.web.dto.Product;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 

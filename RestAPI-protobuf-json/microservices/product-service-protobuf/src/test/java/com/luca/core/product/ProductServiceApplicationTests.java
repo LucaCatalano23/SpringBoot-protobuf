@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import com.luca.util.protobuf.ErrorInfoProto.ErrorInfo;
+import com.luca.error.protobuf.ErrorInfoProto.ErrorInfo;
 import com.luca.core.product.persistence.ProductRepository;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
