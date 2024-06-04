@@ -121,7 +121,7 @@ a very detailed documentation, nor too many blog posts).
 roughly 1.500 questions marked with Protobuf tags. While JSON have more
 than 180 thousand questions on this same platform.
 - **Lack of support**: Google does not provide support for other programming
-languages like Swift, R, Scala and etc... but, sometimes, you can overcome
+languages like Swift, R, Scala etc... but, sometimes, you can overcome
 this issue with third party libraries, like Swift Protobuf provided by Apple.
 - **Non-human readability**: JSON, as exchanged on text format and with simple
 structure, is easy to be read and analyzed by humans. This is not the case
@@ -144,7 +144,7 @@ API and measure the performance of the API. We will measure the
 response time, the throughput and the size of the response data of the 
 API for both microservices.
 
-The plugin used to implement jmter is:
+The plugin used to implement `Jmter` is:
 
 ```pom.xml
 <plugin>
@@ -163,19 +163,33 @@ The plugin used to implement jmter is:
 </plugin>
 ```
 
-In the `src/test/jmeter` directory of each microservice there is
-the `Benchmark.jmx` files that contain the test plan for the performance 
-test. The test plan contains the following elements:
+Using `Jmeter` I created a test plan that sends requests to the API and
+measures the `response time`, the `throughput` and the `size of the response
+data` of the API. Here the test plan for the performance test:
+
+![Jmeter test plan](./images/test_plan.png)
+
+The test plan contains the following elements:
 
 - ***Thread Group***: The thread group defines the number of threads
   and the number of requests to send to the API.
-- ***HTTP Request***: The HTTP request sends a request to the API.
+- ***HTTP Requests***: The HTTP requests sends a request to the API.
 - ***Summary Report***: The summary report shows the response time
   and throughput of the API.
 - ***View Results Tree***: The view results tree shows the response
   data of the API.
 - ***Aggregate Report***: The aggregate report shows the response
   time and throughput of the API.
+
+In the `src/test/jmeter` directory of each microservice I moved 
+the `Benchmark.jmx` files created by `Jmeter` that contain the test
+plan for the performance test. 
+
+For the test plan of protobuf microservice I used the recording 
+template because it is necessary to set the body in a binary form.
+So, with `Jmeter` as a proxy server, I set Postman to send the requests
+to the proxy server, then I registered the requests sent by `Postman` 
+in the test plan.
 
 To run the performance test, you can use the following command:
 
@@ -326,19 +340,76 @@ plugin:
 import com.luca.product.protobuf.ProductProto.Product;
 ```
 
+### TESTS
+
+The tests must be implemented the protobuf format. 
+
+Here is an example of a test that creates a `Product` with a `productId`
+of `1` and verifies that the application returns an error message when a 
+duplicate `Product` is created.:
+
+```java
+@Test
+void duplicateError() throws InvalidProtocolBufferException {
+
+    int productId = 1;
+
+    postAndVerifyProduct(productId, OK);
+
+    assertTrue(repository.findByProductId(productId).isPresent());
+
+    ErrorInfo errorInfo = ErrorInfo.newBuilder()
+            .setPath("/product")
+            .setMessage("Duplicate key, Product Id: " + productId)
+            .build();
+
+    byte[] a = postAndVerifyProduct(productId, UNPROCESSABLE_ENTITY).returnResult().getResponseBody();
+    ErrorInfo error = ErrorInfo.parseFrom(a);
+    System.out.println(error);
+    assertEquals(errorInfo.getPath(), error.getPath());
+    assertEquals(errorInfo.getMessage(), error.getMessage());
+}
+```
+
 ### ERROR HANDLING
 
 I have implemented a custom error handler that returns an `ErrorInfo`
 using protobuf because the error response, in Spring boot, is serialized
 using json by default. 
 
+The error handler is implemented using the `@RestControllerAdvice` annotation
+and the `@ExceptionHandler` annotation. Here is the implementation of the
+error handler:
+
+```java
+private byte[] createHttpErrorInfo(
+HttpStatus httpStatus, ServerHttpRequest request, Exception ex) {
+
+    final String path = request.getPath().pathWithinApplication().value();
+    final String message = ex.getMessage();
+
+    LOG.debug("Returning HTTP status: {} for path: {}, message: {}", httpStatus, path, message);
+
+    return ErrorInfo.newBuilder()
+            .setTimestamp(ZonedDateTime.now().toString())
+            .setPath(path)
+            .setMessage(message)
+            .setHttpStatus(httpStatus.value()).
+            build( ).toByteArray();
+}
+```
+
+The error handler uses the `createHttpErrorInfo` method to create an
+`ErrorInfo` message for the error and returns the serialized `ErrorInfo`
+message as the response body.
+
 ### RUNNING THE PROJECT
 
-You can clone the repository, open the project in IntelliJ IDEA, and
-build and run the project inside IntelliJ IDEA by launching the command
+You can clone the repository, open the project in `IntelliJ IDEA`, and
+build and run the project inside `IntelliJ IDEA` by launching the command
 `mvn run` in the project root folder.
 
-You can also run the microservices containerizing them with Docker
+You can also run the microservices containerizing them with `Docker`
 launching the commands:
 
 - `mvn clean package` (clean useful in the case of a new build and package
@@ -354,10 +425,10 @@ launching the commands:
 
 #### POSTMAN
 
-To send requests to the API, you can use a tool like Postman.
+To send requests to the API, you can use a tool like `Postman`.
 
-To create a `Product`, you can send a POST request to the `/products`
-endpoint with the following body for the RestAPI-json:
+To create a `Product`, you can send a `POST` request to the `/products`
+endpoint with the following body for the `product-service-json` microservice:
 
 ```json
 {
@@ -391,7 +462,7 @@ curl -X POST http://localhost:7002/product \
 #### POSTMAN
 
 To create a `Product`, you can send a POST request to the `/product`
-endpoint with a binary body for the RestAPI-protobuf. 
+endpoint with a binary body for the `product-serice-protobuf` microservice. 
 
 I advise you to use tools to like `https://www.protobufpal.com/` to 
 create the hexadecimal body and `https://gchq.github.io/CyberChef/#recipe=From_Hex('Auto')&input=MDg2ZjEyMGI1MDcyNmY2NDc1NjM3NDIwMzEzMTMxMTg2ZjIyMDA&oeol=VT`
@@ -406,7 +477,7 @@ protoc --encode=com.luca.product.protobuf.ProductProto.Product \
   > product.bin
 ```
 
-In Postman, you can import the file ad the request body and set the header
+In `Postman`, you can import the file ad the request body and set the header
 `Content-Type` to `application/x-protobuf`.
 
 Here is an example:
@@ -426,7 +497,7 @@ curl -X POST http://localhost:7001/product \
                                           
 The file `product.bin` contains the binary data of the `Product` message
 and must be located in the same directory as the curl command. It can be
-created using the method used in Postman.
+created using the method used in `Postman`.
 
 ## Resources
 
