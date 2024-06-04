@@ -369,7 +369,7 @@ endpoint with the following body for the RestAPI-json:
 
 Here is an example:
 
-![Postman json POST](.\images\json_post.png)
+![Postman json POST](./images/json_post.png)
 
 #### CURL
 
